@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Project Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .nav-panel {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-right: 1px solid #e0e0e0;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-panel h2 {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .project-list {
+            list-style: none;
+        }
+
+        .project-list li {
+            margin-bottom: 0.8rem;
+        }
+
+        .project-list a {
+            display: block;
+            padding: 0.8rem 1rem;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-list a:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .project-list a.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        .content-area h2 {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        .task-display {
+            width: 100%;
+            height: 70vh;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .task-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .task-placeholder h3 {
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .nav-panel {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .task-display {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-panel">
+            <h2>Projects</h2>
+            <ul class="project-list">
+                <li><a href="#" data-project="task1">Project 1</a></li>
+                <li><a href="#" data-project="task2">Project 2</a></li>
+                <li><a href="#" data-project="task3">Project 3</a></li>
+                <li><a href="#" data-project="task4">Project 4</a></li>
+            </ul>
+        </div>
+        <div class="content-area">
+            <h2>Select a project to display</h2>
+            <div class="task-display">
+                <div class="task-placeholder">
+                    <h3>Select a project from the menu</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = {
+            "task1": {
+                "title": "Task 1",
+                "colors": ['#ff0000', '#oo44ff', '#32cd32'] // Red, Tomato, OrangeRed
+            },
+            "task2": {
+                "title": "Task 2",
+                "colors": ['#00a841', '#32cd32', '#228b22'] // Green, LimeGreen, ForestGreen
+            },
+            "task3": {
+                "title": "Task 3",
+                "colors": ['#0044ff'] // Blue (Single color for task 3)
+            },
+            "task4": {
+                "title": "Task 4",
+                "colors": ['#800080', '#8a2be2', '#9932cc'] // Purple, BlueViolet, DarkOrchid
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectLinks = document.querySelectorAll('.project-list a');
+            const taskDisplay = document.querySelector('.task-display');
+            
+            projectLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Remove active class from all links
+                    projectLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    const project = this.getAttribute('data-project');
+                    displayTask(project);
+                });
+            });
+
+            function displayTask(project) {
+                const projectData = projects[project];
+                const colors = projectData.colors;
+                let colorIndex = 0;
+
+                // Cycle through colors
+                setInterval(function() {
+                    taskDisplay.innerHTML = `
+                        <div class="task-placeholder" style="background-color: ${colors[colorIndex]};">
+                            <h3>${projectData.title}</h3>
+                        </div>
+                    `;
+                    colorIndex = (colorIndex + 1) % colors.length;
+                }, 2000); // Change color every 2 seconds
+            }
+        });
+    </script>
+</body>
+</html>
